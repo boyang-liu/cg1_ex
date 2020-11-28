@@ -21,14 +21,14 @@ void CreateCube(HEMesh& mesh)
 	mesh.clear();
 	/* Task 1.2.1 */
 	std::vector<OpenMesh::VertexHandle> vhandles(8);
-	vhandles[0] = mesh.add_vertex(OpenMesh::Vec3f( 0.5f, 0.5f,-0.5f));
-	vhandles[1] = mesh.add_vertex(OpenMesh::Vec3f(-0.5f, 0.5f,-0.5f));
-	vhandles[2] = mesh.add_vertex(OpenMesh::Vec3f(-0.5f,-0.5f,-0.5f));
-	vhandles[3] = mesh.add_vertex(OpenMesh::Vec3f( 0.5f,-0.5f,-0.5f));
-	vhandles[4] = mesh.add_vertex(OpenMesh::Vec3f( 0.5f, 0.5f, 0.5f));
-	vhandles[5] = mesh.add_vertex(OpenMesh::Vec3f(-0.5f, 0.5f, 0.5f));
-	vhandles[6] = mesh.add_vertex(OpenMesh::Vec3f(-0.5f,-0.5f, 0.5f));
-	vhandles[7] = mesh.add_vertex(OpenMesh::Vec3f( 0.5f,-0.5f, 0.5f));
+	vhandles[0] = mesh.add_vertex(OpenMesh::Vec3f( 1.0f, 1.0f, 0.0f));
+	vhandles[1] = mesh.add_vertex(OpenMesh::Vec3f( 0.0f, 1.0f, 0.0f));
+	vhandles[2] = mesh.add_vertex(OpenMesh::Vec3f( 0.0f, 0.0f, 0.0f));
+	vhandles[3] = mesh.add_vertex(OpenMesh::Vec3f( 1.0f, 0.0f, 0.0f));
+	vhandles[4] = mesh.add_vertex(OpenMesh::Vec3f(1.0f, 1.0f, 1.0f));
+	vhandles[5] = mesh.add_vertex(OpenMesh::Vec3f( 0.0f, 1.0f, 1.0f));
+	vhandles[6] = mesh.add_vertex(OpenMesh::Vec3f( 0.0f, 0.0f, 1.0f));
+	vhandles[7] = mesh.add_vertex(OpenMesh::Vec3f(1.0f, 0.0f, 1.0f));
 	
 
 	mesh.add_face(vhandles[3], vhandles[2], vhandles[1], vhandles[0]);

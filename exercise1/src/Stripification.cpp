@@ -164,6 +164,8 @@ unsigned int ExtractTriStrips(HEMesh& mesh, OpenMesh::FPropHandleT<int> perFaceS
 	face_id.clear();
 	face_id_new.clear();
 	
+	nStrips += 1;
+
 	}
 	std::cout << total_num << std::endl;
 	std::cout << total << std::endl;
