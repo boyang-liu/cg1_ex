@@ -8,5 +8,5 @@
 
 //Updates the vertex positions by Laplacian smoothing
 void SmoothUniformLaplacian(HEMesh& m, float lambda, unsigned int iterations);
-
+void GetNeighborVertices(HEMesh& m, HEMesh::VertexHandle vh, std::vector<HEMesh::VertexHandle> &v_vh,  std::vector<HEMesh::HalfedgeHandle> &v_hh);
 void AddNoise(HEMesh& m);
