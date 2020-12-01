@@ -25,6 +25,7 @@ private:
 	nanogui::ComboBox* shadingBtn;
 	unsigned int smoothingIterations;
 	nanogui::Slider* sldSmoothingStrength;
+	nanogui::Slider* sldSmoothingStrength_2;
 	unsigned int stripificationTrials;
 
 	HEMesh polymesh;
