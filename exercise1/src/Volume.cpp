@@ -55,7 +55,7 @@ float ComputeVolume(const HEMesh& m)
 				
 				
 			
-				vol += h*area*0.333333f;
+				vol += h*area/3;
 				
 			}
 		}

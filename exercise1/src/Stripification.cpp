@@ -13,6 +13,7 @@
 unsigned int ExtractTriStrips(HEMesh& mesh, OpenMesh::FPropHandleT<int> perFaceStripIdProperty, unsigned int nTrials)
 {
 	//prepare random engine
+	
 	int nStrips = 0;
 	std::mt19937 eng;
 	int k = 5;
@@ -63,7 +64,7 @@ unsigned int ExtractTriStrips(HEMesh& mesh, OpenMesh::FPropHandleT<int> perFaceS
 			length_new++;
 			face_id_new.push_back(first.idx());
 
-			for(int m=0;m<20;m++)
+			for(int m=0;m< nTrials;m++)
 			{
 				HEMesh::HalfedgeHandle& e_next_1=mesh.next_halfedge_handle(e2);
 				HEMesh::HalfedgeHandle& e_inv_1 = mesh.opposite_halfedge_handle(e_next_1);
@@ -101,7 +102,7 @@ unsigned int ExtractTriStrips(HEMesh& mesh, OpenMesh::FPropHandleT<int> perFaceS
 			}
 
 			
-			for (int m = 0; m < 20; m++)
+			for (int m = 0; m < nTrials; m++)
 			{
 				HEMesh::HalfedgeHandle& e_inv_3 = mesh.opposite_halfedge_handle(e3);
 				if (mesh.is_boundary(e_inv_3))

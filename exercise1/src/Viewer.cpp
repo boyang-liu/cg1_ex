@@ -170,6 +170,22 @@ void Viewer::SetupGUI()
 		MeshUpdated();
 	});
 
+
+
+	
+
+
+	sldSmoothingStrength_2 = nse::gui::AddLabeledSliderWithDefaultDisplay(mainWindow, "cotSmoothing Strength", std::make_pair(0.0f, 1.0f), 0.1f, 2);
+	auto smoothBtn2 = new nanogui::Button(mainWindow, "cotangent Smoothing");
+	smoothBtn2->setCallback([this]() {
+		SmoothcotangentLaplacian(polymesh, sldSmoothingStrength_2->value());//, smoothingIterations
+		MeshUpdated();
+	});
+
+
+
+
+
 	nanogui::TextBox* txtStripificationTrials;
 	auto sldStripificationTrials = nse::gui::AddLabeledSlider(mainWindow, "Stripification Trials", std::make_pair(1, 50), 20, txtStripificationTrials);
 	sldStripificationTrials->setCallback([this, txtStripificationTrials](float value)
