@@ -6,7 +6,7 @@
  in vec3 in_position;
  in vec3 in_color;
 out vec3 fragment_color;
-
+out vec4 point_p;
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 void main(void)
@@ -14,7 +14,7 @@ void main(void)
 	
 	gl_Position =projectionMatrix*modelViewMatrix  *vec4(in_position,1.0);
 	fragment_color = in_color;
-	
+	point_p=vec4(in_position,1.0);
 	/* - 2.2.2 (b)
 	 * Declare a new "in" variable with the name "in_color". Instead of setting
 	 * "fragment_color" to the position, set it to "in_color. */
@@ -29,9 +29,6 @@ void main(void)
 	 * Declare another "out" variable and set it to the untransformed input
 	 * position. */
 
-
-
-
-
-
+	  
+	
 }
