@@ -6,9 +6,10 @@
 in vec3 fragment_color;
 in vec4 point_p;
 out vec4 color;
+in vec3 julia_parameter;
 
-
-
+in vec3 centr;
+in float fractalmode;
 void main(void)
 {
 	//color = vec4(fragment_color,1.0); //* 0.5+vec4(0.5) 
@@ -21,12 +22,32 @@ void main(void)
 
 	 *** End of tasks ***/
 	vec2 c,z;
-	float m=1.0;
-	c.x=0.45;
-	c.y=-0.3;
+	float m=julia_parameter.z;
+
+
+
+
+	//julia fractal
+	if(fractalmode==0.0){
+	c.x=julia_parameter.x;
+	c.y=julia_parameter.y;
+	z.x=(point_p.x)*m;
+	z.y=(point_p.y)*m;
+	
+	}else {
+	//the Mandelbrot fractal
+	c.x=1.333*(point_p.x-0.5)*m-centr.x;
+	c.y=(point_p.y-0.5)*m-centr.y;
+	z.x=1.333*(point_p.x-0.5)*m-centr.x;
+	z.y=(point_p.y-0.5)*m-centr.y;
+	}
+	
+	
+
 	float X,Y;
-	z.x=point_p.x*m;
-	z.y=point_p.y*m;
+	
+	
+
 	int imax=200;
 	int i;
     for(i=0; i<imax; i++) {

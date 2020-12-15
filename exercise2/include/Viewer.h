@@ -12,10 +12,12 @@ public:
 	Viewer();
 
 	void drawContents();
-
+	
+	
 private:
 	void SetupGUI();
-
+	// method to change the fractalmode after pressing button
+	void setfractalmode();
 	Eigen::Matrix4f modelViewMatrix, projectionMatrix;
 
 	//GUI Elements for the various options
@@ -25,7 +27,7 @@ private:
 	nanogui::Slider* sldJuliaCX;	//Seed for the Julia fractal
 	nanogui::Slider* sldJuliaCY;
 	nanogui::Slider* sldJuliaZoom;	//Zoom factor for the Julia fractal
-
+	float fractalmode;
 	// The following variables hold OpenGL object IDs
 	GLuint vertex_shader_id,	// ID of the vertex shader
 		fragment_shader_id,	// ID of the fragment shader
@@ -33,8 +35,9 @@ private:
 		vertex_array_id,		// ID of the vertex array
 		position_buffer_id,	// ID of the position buffer
 		color_buffer_id,		// ID of the color buffer
-		uv_map_buffer_id;	// ID of the uv_map
-
+		uv_map_buffer_id,	// ID of the uv_map
+	    centroid_buffer_id; //ID of the centroid buffer ,used for mandelbrot fractal
+		
 							// Read, Compile and link the shader codes to a shader program
 	void CreateShaders();
 	// Create and define the vertex array and add a number of vertex buffers

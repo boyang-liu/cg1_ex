@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 	{
 		nanogui::ref<Viewer> viewer = new Viewer();
 		viewer->setVisible(true);
-
+		
 		nse::util::GLDebug::SetupDebugCallback();
 		nse::util::GLDebug::IgnoreGLError(131185); //buffer usage info
 

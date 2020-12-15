@@ -7,7 +7,7 @@
 #include <nanogui/window.h>
 #include <nanogui/layout.h>
 #include <nanogui/checkbox.h>
-
+#include <nanogui/button.h>
 #include <gui/SliderHelper.h>
 
 #include <iostream>
@@ -27,6 +27,14 @@ Viewer::Viewer()
 
 	camera().FocusOnBBox(nse::math::BoundingBox<float, 3>(Eigen::Vector3f(-1, -1, -1), Eigen::Vector3f(1, 1, 1)));
 }
+void Viewer::setfractalmode(){
+	if (this->fractalmode == 0.0) 
+	{
+		this->fractalmode = 1.0;
+	}
+	else this->fractalmode = 0.0;
+	
+}
 
 void Viewer::SetupGUI()
 {
@@ -42,7 +50,9 @@ void Viewer::SetupGUI()
 	sldJuliaCX = nse::gui::AddLabeledSliderWithDefaultDisplay(mainWindow, "JuliaC.X", std::make_pair(-1.0f, 1.0f), 0.45f, 2);
 	sldJuliaCY = nse::gui::AddLabeledSliderWithDefaultDisplay(mainWindow, "JuliaC.Y", std::make_pair(-1.0f, 1.0f), -0.3f, 2);
 	sldJuliaZoom = nse::gui::AddLabeledSliderWithDefaultDisplay(mainWindow, "Julia Zoom", std::make_pair(0.01f, 10.0f), 1.0f, 2);
-
+	
+	auto butt = new nanogui::Button(mainWindow, "ChangeFractal");
+	butt->setCallback([this]() {setfractalmode();  });
 	performLayout();
 }
 
@@ -60,24 +70,23 @@ void Viewer::CreateVertexBuffers()
 		 1, -1, 0, 1,   0,   0, 255, 1
 	};*/
 	GLfloat positions[] = {
-		  1.0f,   1.0f,   1.0f,    1.0f,   0.0f,   0.0f,
-		  1.0f,  -1.0f,  -1.0f,	   0.0f,   1.0f,   0.0f,
-		 -1.0f,   1.0f,  -1.0f,    0.0f,   0.0f,   1.0f,
+		  1.0f,   1.0f,   1.0f,    1.0f,   0.0f,   0.0f,     0.333f,0.333f,-0.333f,
+		  1.0f,  -1.0f,  -1.0f,	   0.0f,   1.0f,   0.0f,     0.333f,0.333f,-0.333f,
+		 -1.0f,   1.0f,  -1.0f,    0.0f,   0.0f,   1.0f,     0.333f,0.333f,-0.333f,
 
-		  1.0f,   1.0f,  1.0f,     1.0f,   0.0f,   0.0f,
-		 -1.0f,  -1.0f,  1.0f,	   0.0f,   1.0f,   0.0f,
-		  1.0f,  -1.0f, -1.0f,     0.0f,   0.0f,   1.0f,
+		  1.0f,   1.0f,  1.0f,     1.0f,   0.0f,   0.0f,   0.333f,-0.333f,0.333f,
+		 -1.0f,  -1.0f,  1.0f,	   0.0f,   1.0f,   0.0f,   0.333f,-0.333f,0.333f,
+		  1.0f,  -1.0f, -1.0f,     0.0f,   0.0f,   1.0f,   0.333f,-0.333f,0.333f,
 
-		  1.0f,   1.0f,   1.0f,    1.0f,   0.0f,   0.0f,
-		 -1.0f,   1.0f,  -1.0f,	   0.0f,   1.0f,   0.0f,
-		 -1.0f,  -1.0f,   1.0f,    0.0f,   0.0f,   1.0f,
+		  1.0f,   1.0f,   1.0f,    1.0f,   0.0f,   0.0f,   -0.333f,0.333f,0.333f,
+		 -1.0f,   1.0f,  -1.0f,	   0.0f,   1.0f,   0.0f,   -0.333f,0.333f,0.333f,
+		 -1.0f,  -1.0f,   1.0f,    0.0f,   0.0f,   1.0f,   -0.333f,0.333f,0.333f,
 
-		 -1.0f,   1.0f,  -1.0f,    1.0f,   0.0f,   0.0f,
-		  1.0f,  -1.0f,  -1.0f,	   0.0f,   1.0f,   0.0f,
-		 -1.0f,  -1.0f,   1.0f,    0.0f,   0.0f,   1.0f
+		 -1.0f,   1.0f,  -1.0f,    1.0f,   0.0f,   0.0f,    -0.333f,-0.333f,-0.333f,
+		  1.0f,  -1.0f,  -1.0f,	   0.0f,   1.0f,   0.0f,    -0.333f,-0.333f,-0.333f,
+		 -1.0f,  -1.0f,   1.0f,    0.0f,   0.0f,   1.0f,    -0.333f,-0.333f,-0.333f
 
 	};
-	
 	
 
 	// Generate the vertex array 
@@ -96,6 +105,13 @@ void Viewer::CreateVertexBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, position_buffer_id);
 
 
+	// Generate a centroid buffer to be appended to the vertex array
+	glGenBuffers(1, &centroid_buffer_id);
+	// Bind the buffer for subsequent settings
+	glBindBuffer(GL_ARRAY_BUFFER, centroid_buffer_id);
+
+
+
 	// Supply the position data
 	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
 	// The buffer shall now be linked to the shader attribute
@@ -107,7 +123,7 @@ void Viewer::CreateVertexBuffers()
 	glEnableVertexAttribArray(vid);
 	
 	// Set the format of the data to match the type of "in_position"
-	glVertexAttribPointer(vid, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(vid, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
 	
 
 
@@ -116,7 +132,15 @@ void Viewer::CreateVertexBuffers()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
 	GLuint vid2 = glGetAttribLocation(program_id, "in_color");
 	glEnableVertexAttribArray(vid2);
-	glVertexAttribPointer(vid2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(vid2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+	GLuint vid3 = glGetAttribLocation(program_id, "in_centroid");
+	glEnableVertexAttribArray(vid3);
+	glVertexAttribPointer(vid3, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+
+
 	/*** Begin of task 2.2.2 (a) ***
 	Create another buffer that will store color information. This works nearly
 	similar to the code above that creates the position buffer. Store the buffer
@@ -230,14 +254,23 @@ void Viewer::CreateShaders()
 	use the method "CheckShaderCompileStatus()" after the call to glCompileShader().
 	*/
 	/*** End of task 2.2.1 ***/
+	this->fractalmode = 0.0;
 	
 }
 
 void Viewer::drawContents()
 {
+	
+	
 	Eigen::Vector2f juliaC(sldJuliaCX->value(), sldJuliaCY->value());
 	float juliaZoom = sldJuliaZoom->value();
+	GLfloat julia_3_parameter[] = { sldJuliaCX->value(), sldJuliaCY->value() ,juliaZoom };
 
+	//set fractmode value
+	GLfloat fractalmode = this->fractalmode;
+	
+	
+	
 	//Get the transform matrices
 	camera().ComputeCameraMatrices(modelViewMatrix, projectionMatrix);
 
@@ -271,18 +304,19 @@ void Viewer::drawContents()
 	
 	/*** End of task 2.2.4 (b) ***/
 	
-	/*Eigen::Matrix4f  modelview, projection;
-
-	camera().ComputeCameraMatrices(modelview, projection,1.0);
-	this->modelViewMatrix = modelview;
-	this->projectionMatrix = projection;*/
-	
 	GLuint model = glGetUniformLocation(program_id, "modelViewMatrix");
 	GLuint mode2 = glGetUniformLocation(program_id, "projectionMatrix");
-	
-	
+	//parameter for julia
+	GLuint julia = glGetUniformLocation(program_id, "julia");
+	//parameter for fractal mode
+	GLuint mode  = glGetUniformLocation(program_id, "fractal");
+	//GLuint fractal = glGetUniformLocation(program_id, "fractalmode");
 	glUniformMatrix4fv(model, 1, GL_FALSE, modelViewMatrix.data());
 	glUniformMatrix4fv(mode2, 1, GL_FALSE, projectionMatrix.data());
+
+	glUniform3fv(julia, 1, &julia_3_parameter[0]);
+	glUniform1fv(mode, 1, &fractalmode);
+	//glUniform1fv(fractal, 1, &fractalmode);
 	// Unbind the vertex array
 	glBindVertexArray(0);
 	// Deactivate the shader program
